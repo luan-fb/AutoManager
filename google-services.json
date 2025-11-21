@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "987353485840",
+    "project_id": "automanager-bf675",
+    "storage_bucket": "automanager-bf675.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987353485840:android:050ca3597aaf133c393095",
+        "android_client_info": {
+          "package_name": "com.luanferreira.automanager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRwSz27vLdYTLvMziKtfZvfaPlvtl9rfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
