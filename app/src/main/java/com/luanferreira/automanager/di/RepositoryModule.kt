@@ -1,7 +1,9 @@
 package com.luanferreira.automanager.di
 
 import com.luanferreira.automanager.data.repository.AutenticacaoRepositoryImpl
+import com.luanferreira.automanager.data.repository.VeiculoRepositoryImpl
 import com.luanferreira.automanager.domain.repository.AutenticacaoRepository
+import com.luanferreira.automanager.domain.repository.VeiculoRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

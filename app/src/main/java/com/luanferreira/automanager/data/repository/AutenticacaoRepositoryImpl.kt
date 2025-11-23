@@ -2,6 +2,7 @@
 package com.luanferreira.automanager.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.luanferreira.automanager.domain.repository.AutenticacaoRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -31,9 +32,20 @@ class AutenticacaoRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun cadastrar(email: String, senha: String): Flow<Result<Boolean>> = flow {
+    override fun cadastrar(nome: String, email: String, senha: String): Flow<Result<Boolean>> = flow {
         try {
-            auth.createUserWithEmailAndPassword(email, senha).await()
+            // 1. Cria o usuário
+            val resultado = auth.createUserWithEmailAndPassword(email, senha).await()
+            val user = resultado.user
+
+            // 2. Atualiza o Nome de Exibição (Display Name) no Firebase Auth
+            if (user != null && nome.isNotBlank()) {
+                val profileUpdates = UserProfileChangeRequest.Builder()
+                    .setDisplayName(nome)
+                    .build()
+                user.updateProfile(profileUpdates).await()
+            }
+
             emit(Result.success(true))
         } catch (e: Exception) {
             emit(Result.failure(e))

@@ -7,43 +7,41 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.luanferreira.automanager.domain.repository.AutenticacaoRepository
+import com.luanferreira.automanager.ui.navigation.NavGraph
+import com.luanferreira.automanager.ui.navigation.Rota
 import com.luanferreira.automanager.ui.theme.AutoManagerTheme
-import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@EntryPoint
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var authRepository: AutenticacaoRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             AutoManagerTheme {
+                val navController = rememberNavController()
+                val currentUser by authRepository.usuarioAtual.collectAsState(initial = null)
+                val destinoInicial = if (currentUser != null) Rota.Home.caminho else Rota.Login.caminho
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    NavGraph(
+                        navController = navController,
+                        destinoInicial = destinoInicial,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AutoManagerTheme {
-        Greeting("Android")
     }
 }

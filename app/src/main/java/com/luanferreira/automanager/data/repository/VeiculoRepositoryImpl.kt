@@ -23,15 +23,12 @@ class VeiculoRepositoryImpl @Inject constructor(
     @ApplicationScope private val externalScope: CoroutineScope // 1. Scope injetado
 ) : VeiculoRepository {
 
-    // 2. Variável para controlar o listener
     private var listenerRegistration: ListenerRegistration? = null
+    private var ultimoUsuarioId: String? = null
 
     override fun listarVeiculos(): Flow<List<Veiculo>> {
         val userId = auth.currentUser?.uid ?: return emptyFlow()
-
-        // Inicia o listener apenas se mudou o usuário ou ainda não existe
         iniciarListenerFirebase(userId)
-
         return dao.listarPorUsuario(userId)
     }
 
@@ -41,11 +38,7 @@ class VeiculoRepositoryImpl @Inject constructor(
             val id = veiculo.id.ifEmpty { firestore.collection("veiculos").document().id }
             val veiculoFinal = veiculo.copy(id = id, usuarioId = userId)
 
-            // Salva no Firebase
             firestore.collection("veiculos").document(id).set(veiculoFinal).await()
-
-            // O Listener vai atualizar o Room automaticamente,
-            // mas salvar manualmente aqui garante update imediato na UI (Optimistic Update)
             dao.salvar(veiculoFinal)
 
             Result.success(Unit)
@@ -58,15 +51,11 @@ class VeiculoRepositoryImpl @Inject constructor(
         // Implementado via listener automático
     }
 
-    // Método novo para limpar recursos (chamar ao fazer logout)
-    fun limparSessao() {
-        listenerRegistration?.remove()
-        listenerRegistration = null
-    }
-
     private fun iniciarListenerFirebase(userId: String) {
-        listenerRegistration?.remove()
+        if (listenerRegistration != null && ultimoUsuarioId == userId) return
 
+        listenerRegistration?.remove()
+        ultimoUsuarioId = userId
         listenerRegistration = firestore.collection("veiculos")
             .whereEqualTo("usuarioId", userId)
             .addSnapshotListener { snapshot, e ->
@@ -77,12 +66,17 @@ class VeiculoRepositoryImpl @Inject constructor(
 
                 if (snapshot != null && !snapshot.isEmpty) {
                     val veiculos = snapshot.toObjects<Veiculo>()
-
-                    // 3. Usando o escopo seguro injetado
                     externalScope.launch {
                         dao.salvarTodos(veiculos)
                     }
                 }
             }
     }
+
+    fun limparSessao() {
+        listenerRegistration?.remove()
+        listenerRegistration = null
+        ultimoUsuarioId = null
+    }
+
 }
