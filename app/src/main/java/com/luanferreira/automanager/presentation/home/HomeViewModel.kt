@@ -27,7 +27,6 @@ class HomeViewModel @Inject constructor(
     private val authRepository: AutenticacaoRepository
 ) : ViewModel() {
 
-    // O stateIn transforma o Flow (fluxo contínuo) em StateFlow (estado observável p/ Compose)
     val uiState: StateFlow<HomeUiState> = veiculoRepository.listarVeiculos()
         .map { lista ->
             if (lista.isEmpty()) HomeUiState.Empty else HomeUiState.Success(lista)
@@ -37,9 +36,15 @@ class HomeViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000), // Mantém vivo por 5s após sair da tela (rotação)
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = HomeUiState.Loading
         )
+
+    fun deletarVeiculo(veiculo: Veiculo) {
+        viewModelScope.launch {
+            veiculoRepository.deletarVeiculo(veiculo.id)
+        }
+    }
 
     fun logout() {
         viewModelScope.launch {

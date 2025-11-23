@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.luanferreira.automanager.presentation.auth.LoginScreen
 import com.luanferreira.automanager.presentation.auth.CadastroScreen
 import com.luanferreira.automanager.presentation.home.HomeScreen
+import com.luanferreira.automanager.presentation.veiculo.VeiculoFormScreen
 
 @Composable
 fun NavGraph(
@@ -60,13 +61,12 @@ fun NavGraph(
             )
         }
 
-      /*  // 4. Tela de Formulário de Veículo
         composable(route = Rota.FormularioVeiculo.caminho) {
             VeiculoFormScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }
             )
-        }*/
+        }
     }
 }

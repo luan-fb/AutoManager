@@ -1,16 +1,22 @@
 package com.luanferreira.automanager.presentation.home
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.luanferreira.automanager.core.ui.componentes.AutoManagerTopBar
@@ -25,15 +31,13 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            // USANDO O NOVO COMPONENTE
             AutoManagerTopBar(
-                titulo = "Minha Frota",
-                podeVoltar = false, // Home não tem volta
+                titulo = "Meus Veiculos",
+                podeVoltar = false,
                 actions = {
                     IconButton(onClick = {
                         viewModel.logout()
@@ -42,7 +46,7 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                             contentDescription = "Sair",
-                            tint = androidx.compose.ui.graphics.Color.White // Garante branco
+                            tint = Color.White
                         )
                     }
                 }
@@ -94,7 +98,10 @@ fun HomeScreen(
                     )
                 }
                 is HomeUiState.Success -> {
-                    VeiculoList(veiculos = state.veiculos)
+                    VeiculoList(veiculos = state.veiculos,
+                        onDelete = { veiculo ->
+                            viewModel.deletarVeiculo(veiculo)
+                        })
                 }
             }
         }
@@ -102,13 +109,85 @@ fun HomeScreen(
 }
 
 @Composable
-fun VeiculoList(veiculos: List<Veiculo>) {
+fun VeiculoList(
+    veiculos: List<Veiculo>,
+    onDelete: (Veiculo) -> Unit
+) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(veiculos) { veiculo ->
-            VeiculoCard(veiculo = veiculo)
+        items(
+            items = veiculos,
+            key = { it.id }
+        ) { veiculo ->
+            SwipeToDeleteContainer(
+                item = veiculo,
+                onDelete = { onDelete(veiculo) }
+            ) {
+                VeiculoCard(veiculo = veiculo)
+            }
         }
     }
 }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun <T> SwipeToDeleteContainer(
+        item: T,
+        onDelete: (T) -> Unit,
+        content: @Composable (T) -> Unit
+    ) {
+        val state = rememberSwipeToDismissBoxState(
+            confirmValueChange = { value ->
+                if (value == SwipeToDismissBoxValue.StartToEnd) {
+                    onDelete(item)
+                    true
+                } else {
+                    false
+                }
+            }
+        )
+
+        SwipeToDismissBox(
+            state = state,
+            backgroundContent = {
+                DeleteBackground(swipeDismissState = state)
+            },
+            content = { content(item) },
+            enableDismissFromEndToStart = false
+        )
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun DeleteBackground(swipeDismissState: SwipeToDismissBoxState) {
+        val color by animateColorAsState(
+            if (swipeDismissState.targetValue == SwipeToDismissBoxValue.StartToEnd)
+                Color.Red.copy(alpha = 0.8f) else Color.Transparent,
+            label = "ColorAnimation"
+        )
+
+        val scale by animateFloatAsState(
+            if (swipeDismissState.targetValue == SwipeToDismissBoxValue.StartToEnd) 1.2f else 0.8f,
+            label = "ScaleAnimation"
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color,
+                    shape = MaterialTheme.shapes.medium
+                )
+                .padding(horizontal = 20.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Excluir",
+                modifier = Modifier.scale(scale),
+                tint = Color.White
+            )
+        }
+    }

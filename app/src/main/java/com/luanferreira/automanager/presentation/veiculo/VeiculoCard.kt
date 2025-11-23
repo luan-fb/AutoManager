@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.luanferreira.automanager.data.model.Veiculo
+import com.luanferreira.automanager.utils.toDataLegivel
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -23,6 +24,7 @@ fun VeiculoCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         onClick = onClick
     ) {
+        // Avatar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -45,6 +47,7 @@ fun VeiculoCard(
 
             Spacer(modifier = Modifier.width(16.dp))
 
+            // Detalhes do Veículo
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = veiculo.modelo,
@@ -56,7 +59,35 @@ fun VeiculoCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Revisão: ",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                    Text(
+                        text = veiculo.dataUltimaRevisao.toDataLegivel(),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Próxima: ",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                    Text(
+                        text = veiculo.dataProximaRevisao.toDataLegivel(),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(4.dp))
+
                 Text(
                     text = veiculo.placa,
                     style = MaterialTheme.typography.labelLarge,

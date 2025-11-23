@@ -8,4 +8,6 @@ interface VeiculoRepository {
     suspend fun salvarVeiculo(veiculo: Veiculo): Result<Unit>
     suspend fun sincronizarVeiculos()
     fun limparSessao()
+
+    suspend fun deletarVeiculo(veiculoId: String): Result<Unit>
 }

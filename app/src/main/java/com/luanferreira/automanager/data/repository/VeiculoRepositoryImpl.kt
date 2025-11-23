@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 class VeiculoRepositoryImpl @Inject constructor(
@@ -35,12 +36,13 @@ class VeiculoRepositoryImpl @Inject constructor(
     override suspend fun salvarVeiculo(veiculo: Veiculo): Result<Unit> {
         return try {
             val userId = auth.currentUser?.uid ?: throw Exception("Usuário não logado")
-            val id = veiculo.id.ifEmpty { firestore.collection("veiculos").document().id }
+            val id = if (veiculo.id.isEmpty()) firestore.collection("veiculos").document().id else veiculo.id
             val veiculoFinal = veiculo.copy(id = id, usuarioId = userId)
 
-            firestore.collection("veiculos").document(id).set(veiculoFinal).await()
+            withTimeout(10_000L) {
+                firestore.collection("veiculos").document(id).set(veiculoFinal).await()
+            }
             dao.salvar(veiculoFinal)
-
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -49,6 +51,17 @@ class VeiculoRepositoryImpl @Inject constructor(
 
     override suspend fun sincronizarVeiculos() {
         // Implementado via listener automático
+    }
+
+    override suspend fun deletarVeiculo(veiculoId: String): Result<Unit> {
+        return try {
+
+            firestore.collection("veiculos").document(veiculoId).delete().await()
+            dao.deletar(veiculoId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     private fun iniciarListenerFirebase(userId: String) {
