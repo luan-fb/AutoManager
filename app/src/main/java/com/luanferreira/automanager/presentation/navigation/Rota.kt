@@ -1,4 +1,4 @@
-package com.luanferreira.automanager.ui.navigation
+package com.luanferreira.automanager.presentation.navigation
 
 sealed class Rota(val caminho: String) {
     object Login : Rota("login_screen")

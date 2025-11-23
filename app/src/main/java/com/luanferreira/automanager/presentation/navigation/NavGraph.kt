@@ -1,4 +1,4 @@
-package com.luanferreira.automanager.ui.navigation
+package com.luanferreira.automanager.presentation.navigation
 
 
 import androidx.compose.runtime.Composable
@@ -6,8 +6,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.luanferreira.automanager.ui.auth.LoginScreen
-import com.luanferreira.automanager.ui.auth.CadastroScreen
+import com.luanferreira.automanager.presentation.auth.LoginScreen
+import com.luanferreira.automanager.presentation.auth.CadastroScreen
+import com.luanferreira.automanager.presentation.home.HomeScreen
 
 @Composable
 fun NavGraph(
@@ -20,7 +21,6 @@ fun NavGraph(
         startDestination = destinoInicial,
         modifier = modifier
     ) {
-        // 1. Tela de Login
         composable(route = Rota.Login.caminho) {
             LoginScreen(
                 onLoginSuccess = {
@@ -37,7 +37,6 @@ fun NavGraph(
         composable(route = Rota.Cadastro.caminho) {
             CadastroScreen(
                 onCadastroSuccess = {
-                    // Ao cadastrar com sucesso, vai direto para Home
                     navController.navigate(Rota.Home.caminho) {
                         popUpTo(Rota.Login.caminho) { inclusive = true }
                     }
@@ -48,7 +47,26 @@ fun NavGraph(
             )
         }
 
-        // ... (Rotas Home e FormularioVeiculo continuam iguais)
+        composable(route = Rota.Home.caminho) {
+            HomeScreen(
+                onNavigateToCadastroVeiculo = {
+                    navController.navigate(Rota.FormularioVeiculo.caminho)
+                },
+                onLogout = {
+                    navController.navigate(Rota.Login.caminho) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
 
+      /*  // 4. Tela de Formulário de Veículo
+        composable(route = Rota.FormularioVeiculo.caminho) {
+            VeiculoFormScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }*/
     }
 }

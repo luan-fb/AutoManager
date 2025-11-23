@@ -73,7 +73,7 @@ class VeiculoRepositoryImpl @Inject constructor(
             }
     }
 
-    fun limparSessao() {
+    override fun limparSessao() {
         listenerRegistration?.remove()
         listenerRegistration = null
         ultimoUsuarioId = null

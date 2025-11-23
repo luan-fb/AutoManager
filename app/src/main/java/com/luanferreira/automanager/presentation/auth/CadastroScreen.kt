@@ -1,4 +1,4 @@
-package com.luanferreira.automanager.ui.auth
+package com.luanferreira.automanager.presentation.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*

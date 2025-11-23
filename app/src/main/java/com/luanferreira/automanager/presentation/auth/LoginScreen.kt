@@ -1,4 +1,4 @@
-package com.luanferreira.automanager.ui.auth
+package com.luanferreira.automanager.presentation.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -50,7 +50,6 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Título e Subtítulo
         Text(
             text = "AutoManager",
             style = MaterialTheme.typography.displayMedium,
@@ -59,7 +58,7 @@ fun LoginScreen(
         Text(
             text = "Gerencie sua frota com facilidade",
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(Modifier.height(48.dp))
