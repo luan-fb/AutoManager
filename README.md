@@ -85,6 +85,9 @@ O projeto foi construído seguindo as melhores práticas de desenvolvimento Andr
     * Aguarde o *Gradle Sync* finalizar.
     * Selecione um emulador ou dispositivo físico.
     * Clique em **Run** (▶).
+5.  **Usuario utilizado para testes: Email: teste@gmail.com Senha:101010**
+
+
 
 ---
 
