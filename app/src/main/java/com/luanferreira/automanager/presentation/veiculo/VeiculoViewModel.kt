@@ -77,7 +77,7 @@ class VeiculoViewModel @Inject constructor(
             val veiculo = Veiculo(
                 placa = form.placa.uppercase(),
                 modelo = form.modelo,
-                fabricante = if (form.fabricante.isBlank()) "Não informado" else form.fabricante,
+                fabricante = form.fabricante.ifBlank { "Não informado" },
                 ano = form.ano.toIntOrNull() ?: 0,
                 valorFipe = form.valorFipe.replace(",", ".").toDoubleOrNull() ?: 0.0,
                 dataUltimaRevisao = form.ultimaRevisao ?: 0L,

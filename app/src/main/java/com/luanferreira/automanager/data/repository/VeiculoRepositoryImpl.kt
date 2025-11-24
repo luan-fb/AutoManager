@@ -36,7 +36,7 @@ class VeiculoRepositoryImpl @Inject constructor(
     override suspend fun salvarVeiculo(veiculo: Veiculo): Result<Unit> {
         return try {
             val userId = auth.currentUser?.uid ?: throw Exception("Usuário não logado")
-            val id = if (veiculo.id.isEmpty()) firestore.collection("veiculos").document().id else veiculo.id
+            val id = veiculo.id.ifEmpty { firestore.collection("veiculos").document().id }
             val veiculoFinal = veiculo.copy(id = id, usuarioId = userId)
 
             withTimeout(10_000L) {

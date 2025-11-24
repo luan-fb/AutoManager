@@ -1,4 +1,3 @@
-// Arquivo: app/src/main/java/com/luanferreira/automanager/domain/repository/AutenticacaoRepository.kt
 package com.luanferreira.automanager.domain.repository
 
 import kotlinx.coroutines.flow.Flow

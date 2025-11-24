@@ -15,11 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 @Composable
 fun AutoManagerTopBar(
     titulo: String,
-    podeVoltar: Boolean = false, // Controla se mostra a seta
+    podeVoltar: Boolean = false,
     onVoltar: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
-    // Cores do seu tema (Roxo -> Rosa fica muito bonito)
     val primary = MaterialTheme.colorScheme.primary
     val tertiary = MaterialTheme.colorScheme.tertiary
 
@@ -29,7 +28,7 @@ fun AutoManagerTopBar(
                 text = titulo,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.White // Texto Branco para contraste
+                    color = Color.White
                 )
             )
         },
@@ -39,7 +38,7 @@ fun AutoManagerTopBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Voltar",
-                        tint = Color.White // Ícone Branco
+                        tint = Color.White
                     )
                 }
             }

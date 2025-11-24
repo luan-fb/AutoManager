@@ -1,4 +1,3 @@
-// Arquivo: app/src/main/java/com/luanferreira/automanager/data/repository/AutenticacaoRepositoryImpl.kt
 package com.luanferreira.automanager.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
@@ -34,11 +33,9 @@ class AutenticacaoRepositoryImpl @Inject constructor(
 
     override fun cadastrar(nome: String, email: String, senha: String): Flow<Result<Boolean>> = flow {
         try {
-            // 1. Cria o usuário
             val resultado = auth.createUserWithEmailAndPassword(email, senha).await()
             val user = resultado.user
 
-            // 2. Atualiza o Nome de Exibição (Display Name) no Firebase Auth
             if (user != null && nome.isNotBlank()) {
                 val profileUpdates = UserProfileChangeRequest.Builder()
                     .setDisplayName(nome)

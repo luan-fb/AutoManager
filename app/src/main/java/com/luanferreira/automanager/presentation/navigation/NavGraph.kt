@@ -22,24 +22,24 @@ fun NavGraph(
         startDestination = destinoInicial,
         modifier = modifier
     ) {
-        composable(route = Rota.Login.caminho) {
+        composable(route = Rotas.Login.caminho) {
             LoginScreen(
                 onLoginSuccess = {
-                    navController.navigate(Rota.Home.caminho) {
-                        popUpTo(Rota.Login.caminho) { inclusive = true }
+                    navController.navigate(Rotas.Home.caminho) {
+                        popUpTo(Rotas.Login.caminho) { inclusive = true }
                     }
                 },
                 onNavigateToCadastro = {
-                    navController.navigate(Rota.Cadastro.caminho)
+                    navController.navigate(Rotas.Cadastro.caminho)
                 }
             )
         }
 
-        composable(route = Rota.Cadastro.caminho) {
+        composable(route = Rotas.Cadastro.caminho) {
             CadastroScreen(
                 onCadastroSuccess = {
-                    navController.navigate(Rota.Home.caminho) {
-                        popUpTo(Rota.Login.caminho) { inclusive = true }
+                    navController.navigate(Rotas.Home.caminho) {
+                        popUpTo(Rotas.Login.caminho) { inclusive = true }
                     }
                 },
                 onNavigateBack = {
@@ -48,20 +48,20 @@ fun NavGraph(
             )
         }
 
-        composable(route = Rota.Home.caminho) {
+        composable(route = Rotas.Home.caminho) {
             HomeScreen(
                 onNavigateToCadastroVeiculo = {
-                    navController.navigate(Rota.FormularioVeiculo.caminho)
+                    navController.navigate(Rotas.FormularioVeiculo.caminho)
                 },
                 onLogout = {
-                    navController.navigate(Rota.Login.caminho) {
+                    navController.navigate(Rotas.Login.caminho) {
                         popUpTo(0) { inclusive = true }
                     }
                 }
             )
         }
 
-        composable(route = Rota.FormularioVeiculo.caminho) {
+        composable(route = Rotas.FormularioVeiculo.caminho) {
             VeiculoFormScreen(
                 onNavigateBack = {
                     navController.popBackStack()
