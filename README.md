@@ -1,6 +1,6 @@
 # AutoManager 🚗
 
-Aplicativo Android nativo para gerenciamento de frota de veículos, desenvolvido como parte do desafio técnico da Sillion.
+Aplicativo Android nativo para gerenciamento de frota de veículos.
 
 O projeto implementa um **CRUD** com autenticação, focado em arquitetura limpa, persistência local e sincronização remota (Offline-First).
 
